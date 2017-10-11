@@ -11,8 +11,7 @@ const app = express();
 require('./passport.js');
 
 
-// const clientApp = `${__dirname}/frontend-client/build`
-const clientApp = `${__dirname}/my-app/build`
+const clientApp = `${__dirname}/frontend-client/build`
 
 
 app
