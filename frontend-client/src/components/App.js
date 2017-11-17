@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Header from './Header/Header';
+import Main from './Main/Main';
 import axios from 'axios';
 import './App.css';
 
@@ -42,22 +43,10 @@ class App extends Component {
   }
 
   render() {
-    let helloMessage = null;
-    if(this.state.authenticated) {
-      helloMessage = <Hello/>
-    } else {
-      helloMessage = <LoginForm handleChange={this.handleChange} handleSubmit={this.handleSubmit}/>
-    }
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        {helloMessage}
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Header/>
+        <Main/>
       </div>
     );
   }
@@ -65,34 +54,37 @@ class App extends Component {
 
 export default App;
 
+// {helloMessage}
+// <p className="App-intro">
+//   To get started, edit <code>src/App.js</code> and save to reload.
+// </p>
+// function Hello(props) {
+//   return (
+//     <h1>Hello my friend!</h1>
+//   )
+// }
 
-function Hello(props) {
-  return (
-    <h1>Hello my friend!</h1>
-  )
-}
-
-function LoginForm(props) {
-  return (
-    <form onSubmit={props.handleSubmit}>
-    <div>
-      <label>Email:</label>
-      <input type="text" name="email"
-          value={props.email}
-          onChange={props.handleChange}/>
-    </div>
-    <div>
-      <label>Password:</label>
-      <input type="password" name="password"
-          value={props.password}
-          onChange={props.handleChange}/>
-    </div>
-    <div>
-      <input type="submit" value="Log In"/>
-    </div>
-  </form>
-  )
-}
+// function LoginForm(props) {
+//   return (
+//     <form onSubmit={props.handleSubmit}>
+//     <div>
+//       <label>Email:</label>
+//       <input type="text" name="email"
+//           value={props.email}
+//           onChange={props.handleChange}/>
+//     </div>
+//     <div>
+//       <label>Password:</label>
+//       <input type="password" name="password"
+//           value={props.password}
+//           onChange={props.handleChange}/>
+//     </div>
+//     <div>
+//       <input type="submit" value="Log In"/>
+//     </div>
+//   </form>
+//   )
+// }
 
 
 // function LoginForm(props) {
