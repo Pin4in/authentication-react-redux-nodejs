@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import './PageTitle.css'
 
 class PageTitle extends Component {
+  static propTypes = {
+    title: PropTypes.string
+  }
   static defaultProps = {
     title: 'Default title'
-  }
-  static PropTypes = {
-    title: PropTypes.string
   }
   render() {
     return (
