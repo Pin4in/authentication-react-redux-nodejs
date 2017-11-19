@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Route} from 'react-router-dom'
 import LoginForm from '../LoginForm/LoginForm'
 import User from '../User/User'
-
+import EventsPage from '../EventsPage/EventsPage'
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
 // and /schedule routes will match any pathname that starts
@@ -14,6 +14,7 @@ const Main = () => {
       <Switch>
         <Route exact path='/' component={LoginForm}/>
         <Route path='/user' component={User}/>
+        <Route path='/events' component={EventsPage}/>
       </Switch>
     </main>
   )
