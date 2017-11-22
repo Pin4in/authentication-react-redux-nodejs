@@ -7,6 +7,7 @@ const passport = require('passport');
 
 const auth = require('./api/routes/auth');
 const users = require('./api/routes/users');
+const events = require('./api/routes/events');
 const app = express();
 require('./passport.js');
 
@@ -29,6 +30,7 @@ app
   // .use(express.static(clientApp))
   .use(auth)
   .use(users)
+  .use(events)
 ;
 
 app.listen(3030);
