@@ -12,7 +12,7 @@ const app = express();
 require('./passport.js');
 
 
-const clientApp = `${__dirname}/frontend-client/build`
+const clientApp = `${__dirname}/client/build`
 
 
 app
