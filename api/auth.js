@@ -3,7 +3,7 @@
 const passport = require('passport');
 const router = require('express').Router();
 
-const db = require('../../db');
+const db = require('../db');
 
 router
   .get('/signup', (req, res) => {
@@ -21,10 +21,6 @@ router
   })
   .post('/login', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
-      console.log(req.session);
-      console.log(req.user);
-      console.log(req.isAuthenticated());
-      console.log(info);
       if (err) { 
         return next(err); 
       }
@@ -34,10 +30,9 @@ router
           message: info.message
         }); 
       }
-
       req.logIn(user, function(err) {
-        console.log('error!!!');
         if (err) { return next(err); }
+        console.log(`login: user id:${user.id}`);
         return res.send({
           session: req.session,
           user: req.user,

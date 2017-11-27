@@ -5,9 +5,9 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
-const auth = require('./api/routes/auth');
-const users = require('./api/routes/users');
-const events = require('./api/routes/events');
+const auth = require('./api/auth');
+const users = require('./api/users');
+const events = require('./api/events');
 const app = express();
 require('./passport.js');
 
