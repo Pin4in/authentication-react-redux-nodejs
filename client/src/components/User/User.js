@@ -1,33 +1,15 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
+import * as actions from '../../actions';
+import { connect } from 'react-redux';
 import Loader from '../Loader/Loader'
 
 class User extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: null,
-      userId: 1
-    };
-  }
-
   componentWillMount() {
-    axios.get(`http://localhost:3030/users/${this.state.userId}`)
-      .then(({data}) => {
-        console.log('user', data);
-        this.setState({
-          user: data
-        });
-        console.log(this.state.user);
-      })
-      .catch(err => {
-        console.log('err', err)
-      });
+    this.props.fetchUser({id: 1});
   }
   render() {
-    const { user } = this.state.user ? this.state : false;
-    if (user) {
+    const { user } = this.props;
+    if (user.id) {
       return (
         <div style={{padding: '20px'}}>
           <p>user email: {user.email}</p>
@@ -44,4 +26,8 @@ class User extends Component {
   }
 }
 
-export default User;
+function mapStateToProps(state) {
+  return { user: state.user };
+}
+
+export default connect(mapStateToProps, actions)(User);
