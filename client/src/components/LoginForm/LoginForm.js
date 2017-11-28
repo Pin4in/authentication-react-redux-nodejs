@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import * as actions from '../../actions';
 
 class LoginForm extends Component {
   constructor() {
@@ -8,8 +9,6 @@ class LoginForm extends Component {
     this.state = {
       email: '',
       password: '',
-      authenticated: false,
-      errorMessage: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,33 +26,34 @@ class LoginForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    axios.post('http://127.0.01:3030/login', {
-        "email": this.state.email,
-        "password": this.state.password
-      })
-      .then(({data}) => {
-        console.log(data);
-        if (data.authenticated) {
-          this.setState({
-            authenticated: true
-          });
-        } else {
-          this.setState({
-            errorMessage: data.message
-          })
-        }
-      })
-      .catch(err => {
-        console.log('err', err)
-      });
+    this.props.signin({ email: this.state.email, password: this.state.password});
+    // axios.post('http://127.0.01:3030/login', {
+    //     "email": this.state.email,
+    //     "password": this.state.password
+    //   })
+    //   .then(({data}) => {
+    //     console.log(data);
+    //     if (data.authenticated) {
+    //       this.setState({
+    //         authenticated: true
+    //       });
+    //     } else {
+    //       this.setState({
+    //         errorMessage: data.message
+    //       })
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.log('err', err)
+    //   });
   }
 
   render() {
-    const { authenticated } = this.state;
-    const { from } = this.props.location.state || { from: { pathname: '/user' } }
-    const errorMessage = this.state.errorMessage ? 
-      (<p>{this.state.errorMessage}</p>) : null;
-
+    const { authenticated } = this.props.auth;
+    const { from } = this.props.location.state || { from: { pathname: '/events' } }
+    const errorMessage = this.props.auth.error ? 
+      (<p>{this.props.auth.error}</p>) : null;
+    console.log('AUTH', this.props.auth);
     if (authenticated) {
       return (
         <Redirect to={from}/>
@@ -83,4 +83,8 @@ class LoginForm extends Component {
   }
 }
 
-export default LoginForm;
+function mapStateToProps(state) {
+  return { auth: state.auth };
+}
+
+export default connect(mapStateToProps, actions)(LoginForm);

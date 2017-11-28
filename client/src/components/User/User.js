@@ -29,10 +29,10 @@ class User extends Component {
     const { user } = this.state.user ? this.state : false;
     if (user) {
       return (
-        <div>
-          {user.email}<br/>
-          {user.id}<br/>
-          {user.name}
+        <div style={{padding: '20px'}}>
+          <p>user email: {user.email}</p>
+          <p>user id: {user.id}</p>
+          <p> user name: {user.name}</p>
         </div>
       )
     }

@@ -48,9 +48,7 @@ class Events extends Component {
     const events = this.state.events.map((event, i) => {
       const eventCreated = moment(new Date(event.dateCreated));
       const now  = moment(new Date());
-      console.log('eventCreated', moment(eventCreated).fromNow(true));
       const fromNow = now.diff(eventCreated, 'days');
-      console.log(fromNow);
       return (
         <li key={i}>
           <div className="event">
