@@ -27,38 +27,10 @@ class LoginForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
     this.props.signin({ email: this.state.email, password: this.state.password});
-    // axios.post('http://127.0.01:3030/login', {
-    //     "email": this.state.email,
-    //     "password": this.state.password
-    //   })
-    //   .then(({data}) => {
-    //     console.log(data);
-    //     if (data.authenticated) {
-    //       this.setState({
-    //         authenticated: true
-    //       });
-    //     } else {
-    //       this.setState({
-    //         errorMessage: data.message
-    //       })
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log('err', err)
-    //   });
   }
 
   render() {
-    const { authenticated } = this.props.auth;
-    const { from } = this.props.location.state || { from: { pathname: '/events' } }
-    const errorMessage = this.props.auth.error ? 
-      (<p>{this.props.auth.error}</p>) : null;
-    console.log('AUTH', this.props.auth);
-    if (authenticated) {
-      return (
-        <Redirect to={from}/>
-      )
-    }
+    const errorMessage = this.props.auth.error ? (<p>{this.props.auth.error}</p>) : null;
 
     return (
       <form onSubmit={this.handleSubmit}>
