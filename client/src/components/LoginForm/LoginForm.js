@@ -31,7 +31,12 @@ class LoginForm extends Component {
 
   render() {
     const errorMessage = this.props.auth.error ? (<p>{this.props.auth.error}</p>) : null;
+    const nextPath = { pathname: '/events' };
 
+    if (this.props.auth.authenticated) {
+      return (<Redirect to={nextPath} />);
+    }
+    
     return (
       <form onSubmit={this.handleSubmit}>
         { errorMessage }

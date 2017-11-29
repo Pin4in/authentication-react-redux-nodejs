@@ -11,7 +11,7 @@ export function signin({email, password}) {
   return function(dispatch) {
     axios.post(`${ROOT_URL}/login`, { email, password })
       .then(({data}) => {
-        console.log(data);
+        console.log('user', data);
         if (data.authenticated) {
           dispatch({type: AUTH_USER});
         } else {
