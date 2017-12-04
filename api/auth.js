@@ -1,26 +1,20 @@
 'use strict';
 
-const passport = require('passport');
-const router = require('express').Router();
+const config    = require('../config.js');
+const db        = require('../db');
+const jwt       = require('jwt-simple');
+const passport  = require('passport');
+const router    = require('express').Router();
 
-const db = require('../db');
+function tokenForUser(user) {
+  const sub = user.id;
+  const iat = new Date().getTime();
+  return jwt.encode({sub, iat}, config.jwt_secret);
+}
 
 router
-  .get('/signup', (req, res) => {
-    res.render('signup');
-  })
-  .post("/signup", passport.authenticate("local-register"), (req, res) => {
-    res.send({
-      session: req.session,
-      user: req.user,
-      authenticated: req.isAuthenticated
-    });
-  })
-  .get('/login', (req, res) => {
-    res.render('login');
-  })
-  .post('/login', function(req, res, next) {
-    passport.authenticate('local', function(err, user, info) {
+  .post("/signup",  function(req, res, next) {
+    passport.authenticate('signup', function(err, user, info) {
       if (err) { 
         return next(err); 
       }
@@ -30,24 +24,36 @@ router
           message: info.message
         }); 
       }
-      req.logIn(user, function(err) {
+      req.logIn(user, { session: false }, function(err) {
         if (err) { return next(err); }
-        console.log(`login: user id:${user.id}`);
         return res.send({
-          session: req.session,
+          token: tokenForUser(user),
           user: req.user,
           authenticated: req.isAuthenticated(),
         });
       });
     })(req, res, next);
   })
-  .post('/login', passport.authenticate('local'), (req, res) => {
-    console.log('response', res);
-    res.send({
-      session: req.session,
-      user: req.user,
-      authenticated: req.isAuthenticated(),
-    });
+  .post('/login', (req, res, next) => {
+    passport.authenticate('local', { session: false }, function(err, user, info) {
+      if (err) { 
+        return next(err); 
+      }
+      if (!user) { 
+        return res.send({
+          authenticated: false,
+          message: info.message
+        }); 
+      }
+      req.logIn(user, { session: false }, function(err) {
+        if (err) { return next(err); }
+        return res.json({
+          token: tokenForUser(user),
+          user: req.user,
+          authenticated: req.isAuthenticated(),
+        });
+      });
+    })(req, res, next);
   })
   .get('/logout', (req, res, next) => {
     req.session.destroy(err => {

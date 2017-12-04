@@ -1,33 +1,45 @@
 'use strict';
 
-const knex = require('knex');
-const bcrypt = require('bcrypt-nodejs');
-const passport = require('passport');
-
-const LocalStrategy = require('passport-local').Strategy;
-const db = require('./db');
+// SIGNUP -> VALIDATE -> CREATE NEW USER -> TOKEN
+// SIGNIN -> VALIDATE -> TOKEN
+// AUTH REQUEST -> VALIDATE TOKEN -> RESOURSE ACCESS
 
 
-passport.use(new LocalStrategy({ usernameField: 'email' }, authentication));
-passport.use('local-register', new LocalStrategy({passReqToCallback: true}, register))
+const config         = require('./config.js');
+const db             = require('./db');
+const knex           = require('knex');
+const passport       = require('passport');
+const jwtStrategy    = require('passport-jwt').Strategy;
+const extractJwt     = require('passport-jwt').ExtractJwt;
+const LocalStrategy  = require('passport-local').Strategy;
+const bcrypt         = require('bcrypt-nodejs');
 
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-})
-passport.deserializeUser((id, done) => {
+const jwtOptions = {
+  jwtFromRequest: extractJwt.fromHeader('authorization'),
+  secretOrKey: config.jwt_secret
+};
+const signupOptions = {
+  usernameField : 'name',
+  passwordField : 'password',
+  passReqToCallback : true
+};
+
+passport.use(new jwtStrategy(jwtOptions, jwtLogin));
+passport.use(new LocalStrategy({ usernameField: 'email'}, login));
+passport.use('signup', new LocalStrategy(signupOptions, signup))
+
+function jwtLogin(payload, done) {
   db('users')
-    .where('id', id)
+    .where('id', payload.sub)
     .first()
     .then(user => {
         done(null, user)
     })
     .catch(err => done(err));
-})
+}
 
-
-
-function authentication(email, password, done) {
+function login(email, password, done) {
   db('users')
     .where('email', email)
     .first()
@@ -43,8 +55,7 @@ function authentication(email, password, done) {
     });
 }
 
-
-function register(req, username, password, done) {
+function signup(req, name, password, done) {
   db('users')
     .where('email', req.body.email)
     .first()
@@ -57,11 +68,10 @@ function register(req, username, password, done) {
       }
 
       const newUser = {
-        name: username,
+        name,
         email: req.body.email,
         password: bcrypt.hashSync(password)
       };
-      console.log(newUser);
 
       db('users')
         .insert(newUser)
@@ -71,3 +81,16 @@ function register(req, username, password, done) {
         })
     });
 }
+
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// })
+// passport.deserializeUser((id, done) => {
+//   db('users')
+//     .where('id', id)
+//     .first()
+//     .then(user => {
+//         done(null, user)
+//     })
+//     .catch(err => done(err));
+// })
