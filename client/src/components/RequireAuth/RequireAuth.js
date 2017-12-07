@@ -6,7 +6,7 @@ export default function(ComposedComponent) {
   class Authentication extends Component {
     render() {
       const { authenticated } = this.props.auth;
-      const defaultPath ={ pathname: '/' };
+      const defaultPath ={ pathname: '/login' };
       if ( !authenticated) {
         return (
           <Redirect to={defaultPath}/>
