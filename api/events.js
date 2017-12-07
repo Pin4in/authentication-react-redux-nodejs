@@ -13,8 +13,3 @@ module.exports = router
       res.send(data);
     }, next);
   })
-  // .get('/events', (req, res, next) => {
-  //   db("events").then(data => {
-  //     res.send(data);
-  //   }, next);
-  // });
