@@ -1,53 +1,27 @@
 import React, { Component } from 'react';
+import { Route} from 'react-router-dom';
+
 import Header from './Header/Header';
-import Main from './Main/Main';
-import axios from 'axios';
+// import Main from './Main/Main';
 import './App.css';
 
+import LoginForm from './LoginForm/LoginForm';
+import Home from './Home/Home';
+import User from './User/User';
+import EventsPage from './EventsPage/EventsPage';
+import requireAuth from './RequireAuth/RequireAuth';
+
+
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      email: '',
-      password: '',
-      authenticated: false
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-    axios.post('http://127.0.01:3030/login', {
-        "email": this.state.email,
-        "password": this.state.password
-      })
-      .then(({data}) => {
-        if (data.authenticated) {
-          console.log('hurrey!')
-          this.setState({
-            authenticated: true
-          });
-        }
-      });
-  }
-
   render() {
     return (
       <div className="App">
         <Header/>
         <div className="container">
-          <Main/>
+          <Route exact path='/' component={Home}/>
+          <Route exact path='/login' component={LoginForm}/>
+          <Route path='/user' component={User}/>
+          <Route path='/events' component={requireAuth(EventsPage)}/>
         </div>
       </div>
     );

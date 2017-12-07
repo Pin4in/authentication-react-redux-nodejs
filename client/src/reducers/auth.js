@@ -10,7 +10,6 @@ const DEFAULTS = {
 export default function(state = DEFAULTS, action) {
   switch(action.type) {
     case AUTH_USER:
-      console.log('user authenticated!');
       return { ...state, error: '', authenticated: true };
     case AUTH_ERROR:
       return { ...state, error: action.payload}

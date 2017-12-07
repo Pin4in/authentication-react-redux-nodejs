@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import {connect} from 'react-redux';
+import * as actions from '../../actions';
 import moment from 'moment';
-
 import Loader from '../Loader/Loader';
+import Event from '../Event/Event';
 import './Events.css'
 
 class Events extends Component {
@@ -16,15 +17,7 @@ class Events extends Component {
     
   }
   componentWillMount() {
-    axios.get(`http://localhost:3030/events`)
-      .then(({data}) => {
-        this.setState({
-          events: data
-        });
-      })
-      .catch(err => {
-        console.log('err', err);
-      });
+    this.props.fetchEvents({id: 1});
   }
 
   deleteEvent(eventName) {
@@ -41,27 +34,19 @@ class Events extends Component {
     
   }
   render() {
-    if (!this.state.events) {
+    if (!this.props.events) {
       return <Loader />;
     }
-
-    const events = this.state.events.map((event, i) => {
+    const events = this.props.events.map((event, i) => {
       const eventCreated = moment(new Date(event.dateCreated));
       const now  = moment(new Date());
       const fromNow = now.diff(eventCreated, 'days');
       return (
         <li key={i}>
-          <div className="event">
-            <h2>{event.title}</h2>
-            <p>{fromNow}</p>
-            <div className="event-actions">
-              <button>Edit</button>
-              <button onClick={this.deleteEvent.bind(this, event.name)}>Delete</button>
-            </div>
-          </div>
+          <Event event={event} fromNow={fromNow}/>
         </li>
-      );
-    })
+      )
+    });
 
     return (
       <ul className="row events">{events}</ul>
@@ -69,4 +54,7 @@ class Events extends Component {
   }
 }
 
-export default Events;
+function mapStateToProps(state) {
+  return { events: state.events.events };
+}
+export default connect(mapStateToProps, actions)(Events);

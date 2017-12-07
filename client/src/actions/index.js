@@ -1,18 +1,19 @@
 import axios from 'axios';
+import config from '../config.js';
 import {
   AUTH_USER,
   AUTH_ERROR,
-  FETCH_USER
+  FETCH_USER,
+  FETCH_EVENTS
 } from './types';
-
-const ROOT_URL = 'http://127.0.01:3030'
 
 export function signin({email, password}) {
   return function(dispatch) {
-    axios.post(`${ROOT_URL}/login`, { email, password })
+    axios.post(`${config.api}/login`, { email, password })
       .then(({data}) => {
         console.log('user', data);
         if (data.authenticated) {
+          localStorage.setItem('token', data.token);
           dispatch({type: AUTH_USER});
         } else {
           dispatch(authError(data.message));
@@ -33,7 +34,7 @@ export function authError(error) {
 
 export function fetchUser({id}) {
   return function(dispatch) {
-    axios.get(`${ROOT_URL}/users/${id}`)
+    axios.get(`${config.api}/users/${id}`)
       .then(({data}) => {
         dispatch({
           type: FETCH_USER,
@@ -44,5 +45,22 @@ export function fetchUser({id}) {
         console.log('err', err)
       });
 
+  }
+}
+
+export function fetchEvents({id}) {
+  return function(dispatch) {
+    axios.get(`${config.api}/events`,{
+        headers: { Authorization: localStorage.getItem('token') }
+      })
+      .then(({data}) => {
+        dispatch({
+          type: FETCH_EVENTS,
+          payload: data
+        });
+      })
+      .catch(err => {
+        console.log('err', err);
+      })
   }
 }
