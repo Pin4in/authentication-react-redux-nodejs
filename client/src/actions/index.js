@@ -2,6 +2,7 @@ import axios from 'axios';
 import config from '../config.js';
 import {
   AUTH_USER,
+  UNAUTH_USER,
   AUTH_ERROR,
   FETCH_USER,
   FETCH_EVENTS
@@ -22,6 +23,22 @@ export function signin({email, password}) {
       .catch(err => {
         dispatch(authError(err));
       });
+  }
+}
+
+export function signOut() {
+  return function(dispatch) {
+    axios.get(`${config.api}/logout`)
+      .then(({data}) => {
+        if(data.authenticated) {
+          return dispatch(authError('unable to signout'));
+        }
+        localStorage.removeItem('token');
+        dispatch({type: UNAUTH_USER});
+      })
+      .catch(err => {
+        dispatch(authError(err));
+      })
   }
 }
 

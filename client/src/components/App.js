@@ -9,7 +9,8 @@ import LoginForm from './LoginForm/LoginForm';
 import Home from './Home/Home';
 import User from './User/User';
 import EventsPage from './EventsPage/EventsPage';
-import requireAuth from './RequireAuth/RequireAuth';
+import RequireAuth from './RequireAuth/RequireAuth';
+import SignOut from './SignOut/SignOut';
 
 
 class App extends Component {
@@ -20,8 +21,9 @@ class App extends Component {
         <div className="container">
           <Route exact path='/' component={Home}/>
           <Route exact path='/login' component={LoginForm}/>
-          <Route path='/user' component={User}/>
-          <Route path='/events' component={requireAuth(EventsPage)}/>
+          <Route path='/user' component={RequireAuth(User)}/>
+          <Route path='/events' component={RequireAuth(EventsPage)}/>
+          <Route path='/logout' component={SignOut}/>
         </div>
       </div>
     );
